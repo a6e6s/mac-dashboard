@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileHomeScreen = document.getElementById('mobile-home-screen');
     const clock = document.getElementById('clock');
     const themeSwitcher = document.getElementById('theme-switcher');
+    const fullscreenToggle = document.getElementById('fullscreen-toggle');
     const activeAppMenu = document.getElementById('active-app-menu');
     const notificationIcon = document.getElementById('notification-icon');
     const notificationDrawer = document.getElementById('notification-drawer');
@@ -33,15 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- App & Notification Definitions ---
     const apps = [
-        { id: 'dashboard', name: 'Dashboard', icon: '🏠', content: `<h2 class="text-2xl font-bold mb-4">Dashboard</h2><p>Welcome to your admin dashboard. Here's a quick overview of your application's status.</p><div class="mt-4 p-4 bg-black/20 rounded-lg"><p>Server Status: <span class="text-green-400">Online</span></p><p>New Users Today: 12</p></div>` },
-        { id: 'users', name: 'Users', icon: '👥', content: `<h2 class="text-2xl font-bold mb-4">User Management</h2><p>Here you can manage all registered users.</p><ul class="mt-4 space-y-2">
-            <li class="flex justify-between items-center p-2 bg-black/20 rounded-lg"><span>Alice</span> <button class="bg-blue-500 px-2 py-1 rounded">Edit</button></li>
-            <li class="flex justify-between items-center p-2 bg-black/20 rounded-lg"><span>Bob</span> <button class="bg-blue-500 px-2 py-1 rounded">Edit</button></li>
-            <li class="flex justify-between items-center p-2 bg-black/20 rounded-lg"><span>Charlie</span> <button class="bg-blue-500 px-2 py-1 rounded">Edit</button></li>
-            </ul>` },
-        { id: 'settings', name: 'Settings', icon: '⚙️', content: `<h2 class="text-2xl font-bold mb-4">System Settings</h2><p>Configure your application settings here.</p><div class="mt-4 space-y-3"><label class="flex items-center"><input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded"> <span class="ml-2">Enable maintenance mode</span></label><label class="flex items-center"><input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded" checked> <span class="ml-2">Enable email notifications</span></label></div>` },
-        { id: 'reports', name: 'Reports', icon: '📊', content: `<h2 class="text-2xl font-bold mb-4">Analytics & Reports</h2><p>View detailed reports and analytics.</p><div class="mt-4 bg-black/20 p-4 rounded-lg"><img src="https://placehold.co/400x200/334155/e2e8f0?text=Sales+Chart" class="w-full rounded" alt="Chart Placeholder"></div>` },
-        
+        { id: 'dashboard', name: 'Dashboard', icon: '🏠', contentUrl: 'dashboard.html', content: null },
+        { id: 'users', name: 'Users', icon: '👥', contentUrl: 'users.html', content: null },
+        { id: 'settings', name: 'Settings', icon: '⚙️', contentUrl: 'settings.html', content: null },
+        { id: 'reports', name: 'Reports', icon: '📊', contentUrl: 'reports.html', content: null }
     ];
 
     const notifications = [
@@ -62,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateClock();
         setInterval(updateClock, 1000); // Update clock every second
         themeSwitcher.addEventListener('click', toggleTheme);
+        fullscreenToggle.addEventListener('click', toggleFullScreen);
         notificationIcon.addEventListener('click', toggleNotificationDrawer);
         profileIcon.addEventListener('click', toggleProfileMenu);
         document.addEventListener('mousedown', onMouseDown);
@@ -70,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', checkViewport);
         document.addEventListener('click', handleGlobalClick);
         
-        // Open the dashboard app by default on desktop
         if (!isMobile) {
             openApp('dashboard');
         }
@@ -78,18 +74,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Checks the viewport width and toggles the mobile class on the body.
-     * This function is crucial for the responsive behavior of the dashboard.
      */
     function checkViewport() {
         isMobile = window.innerWidth < 768;
         document.body.classList.toggle('is-mobile', isMobile);
         
         if (isMobile) {
-            // Close all windows and show the mobile home screen
             Object.keys(openWindows).forEach(closeApp);
             mobileHomeScreen.style.display = 'grid';
         } else {
-            // Hide mobile home screen and open dashboard if no windows are open
             mobileHomeScreen.style.display = 'none';
             if (Object.keys(openWindows).length === 0) {
                 openApp('dashboard');
@@ -111,6 +104,19 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function toggleTheme() {
         document.documentElement.classList.toggle('dark');
+    }
+
+    /**
+     * Toggles the browser's fullscreen mode.
+     */
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
     }
 
     // --- UI Rendering ---
@@ -174,18 +180,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleDockClick(appId) {
         const windowEl = openWindows[appId];
         if (windowEl) {
-            // If window is active and visible, minimize it
             if (windowEl === activeWindow && windowEl.style.display !== 'none') {
                 minimizeWindow(windowEl);
             } else {
-                // If window is minimized, restore it
                 if (windowEl.style.display === 'none') {
                     restoreWindow(windowEl);
                 }
                 focusWindow(windowEl);
             }
         } else {
-            // If window is not open, open it
             openApp(appId);
         }
     }
@@ -208,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Window Management ---
 
     /**
-     * Creates and opens a new application window.
+     * Creates and opens a new application window, loading its content via AJAX.
      * @param {string} appId - The ID of the app to open.
      */
     function openApp(appId) {
@@ -245,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div></div>
             </div>
             <div class="window-content flex-grow p-4 overflow-auto text-gray-900 dark:text-gray-100">
-                ${app.content}
+                <!-- Content will be loaded here -->
             </div>
             <div class="resizer text-gray-400 dark:text-gray-600">
                 <svg width="12" height="12" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -258,7 +261,27 @@ document.addEventListener('DOMContentLoaded', () => {
         windowsContainer.appendChild(windowEl);
         openWindows[appId] = windowEl;
 
-        // Add event listeners for window controls
+        const contentArea = windowEl.querySelector('.window-content');
+        contentArea.innerHTML = '<div class="flex items-center justify-center h-full"><p>Loading...</p></div>';
+
+        if (app.content) {
+            contentArea.innerHTML = app.content;
+        } else {
+            fetch(app.contentUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.text();
+                })
+                .then(html => {
+                    app.content = html;
+                    contentArea.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error("Error fetching content for " + app.name + ":", error);
+                    contentArea.innerHTML = `<div class="p-4 text-red-500">Error loading content.</div>`;
+                });
+        }
+
         windowEl.querySelector('.close-btn').addEventListener('click', (e) => { e.stopPropagation(); closeApp(appId); });
         windowEl.querySelector('.min-btn').addEventListener('click', (e) => { e.stopPropagation(); minimizeWindow(windowEl); });
         windowEl.querySelector('.max-btn').addEventListener('click', (e) => { e.stopPropagation(); toggleMaximizeWindow(windowEl); });
@@ -300,7 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const dockItem = document.querySelector(`.dock-item[data-app-id="${appId}"]`);
         if (!dockItem) return;
 
-        // Calculate the position of the dock item to animate towards
         const windowRect = windowEl.getBoundingClientRect();
         const dockRect = dockItem.getBoundingClientRect();
         const deltaX = dockRect.left - windowRect.left + (dockRect.width / 2) - (windowRect.width / 2);
@@ -310,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
         windowEl.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.1)`;
         windowEl.style.opacity = '0';
 
-        setTimeout(() => { windowEl.style.display = 'none'; }, 400); // Hide after animation
+        setTimeout(() => { windowEl.style.display = 'none'; }, 400);
 
         if (activeWindow === windowEl) {
             activeWindow = null;
@@ -325,13 +347,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function restoreWindow(windowEl) {
         windowEl.style.display = 'flex';
         
-        // Use requestAnimationFrame to ensure the initial state is applied before animating
         requestAnimationFrame(() => {
             windowEl.style.transition = 'transform 0.4s cubic-bezier(0, 0.5, 0.5, 1), opacity 0.4s ease-in';
             windowEl.style.transform = 'translate(0, 0) scale(1)';
             windowEl.style.opacity = '1';
             setTimeout(() => { 
-                // Reset transition to default after animation
                 windowEl.style.transition = 'all 0.2s ease-in-out';
                 windowEl.style.transform = '';
             }, 400);
@@ -345,14 +365,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleMaximizeWindow(windowEl) {
         if (isMobile) return;
         if (windowEl.dataset.maximized === 'true') {
-            // Restore to previous dimensions
             windowEl.style.top = windowEl.dataset.lastTop;
             windowEl.style.left = windowEl.dataset.lastLeft;
             windowEl.style.width = windowEl.dataset.lastWidth;
             windowEl.style.height = windowEl.dataset.lastHeight;
             windowEl.dataset.maximized = "false";
         } else {
-            // Store current dimensions and maximize
             windowEl.dataset.lastTop = windowEl.style.top;
             windowEl.dataset.lastLeft = windowEl.style.left;
             windowEl.dataset.lastWidth = windowEl.style.width;
@@ -463,7 +481,6 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function onMouseMove(e) {
         if (isMobile) return;
-        // Use transform for smoother dragging
         if (isDragging && dragTarget) {
             const dx = e.clientX - initialMouseX;
             const dy = e.clientY - initialMouseY;
@@ -484,7 +501,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isMobile) return;
 
         if (isDragging && dragTarget) {
-            // Finalize position by updating left/top and resetting transform
             const dx = e.clientX - initialMouseX;
             const dy = e.clientY - initialMouseY;
             dragTarget.style.left = `${initialWindowX + dx}px`;
