@@ -1,0 +1,167 @@
+/*
+ * macOS Style Admin Dashboard
+ * Custom Stylesheet
+ *
+ * This file contains all the custom styles for the dashboard,
+ * including layout, animations, and responsive design adjustments.
+ */
+
+/* --- General Body & Font --- */
+body {
+    font-family: 'Inter', sans-serif; /* Sets a modern, clean font */
+    height: 100vh; /* Full viewport height */
+    width: 100vw; /* Full viewport width */
+    overflow: hidden; /* Prevents scrollbars on the body */
+    user-select: none; /* Prevents text selection on the UI elements */
+}
+
+/* --- Desktop Wallpaper --- */
+.desktop-bg {
+    background-image: url('https://images.unsplash.com/photo-1620646231593-61e6319885a6?q=80&w=2070&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+}
+.dark .desktop-bg {
+     background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1974&auto=format&fit=crop');
+}
+
+/* --- Application Window Styles --- */
+.app-window {
+    min-width: 300px;
+    min-height: 200px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); /* macOS-like shadow */
+    transition: all 0.2s ease-in-out; /* Default transition for resizing */
+}
+.app-window.is-dragging {
+    transition: none; /* Disable transitions while dragging for better performance */
+}
+.app-window[data-maximized="true"] {
+    border-radius: 0; /* Square corners when maximized */
+    transition: all 0.2s ease-in-out;
+}
+
+/* --- Window Title Bar --- */
+.title-bar {
+    height: 36px;
+    cursor: grab; /* Indicates the bar is draggable */
+    flex-shrink: 0; /* Prevents the title bar from shrinking */
+}
+.title-bar:active {
+    cursor: grabbing; /* Changes cursor during drag */
+}
+
+/* --- Dock Styles --- */
+.dock {
+    transform: translateX(-50%); /* Centers the dock horizontally */
+    backdrop-filter: blur(12px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+}
+.dock-item {
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1); /* Bouncy transition */
+    position: relative;
+}
+.dock-item:hover {
+    transform: scale(1.2) translateY(-10px); /* Magnification effect */
+    margin: 0 0.75rem;
+}
+.dock-item .app-name-tooltip {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s ease;
+    pointer-events: none; /* Prevents tooltip from interfering with mouse events */
+}
+.dock-item:hover .app-name-tooltip {
+    opacity: 1; /* Show on hover */
+}
+.active-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* --- Custom Scrollbar --- */
+.window-content::-webkit-scrollbar, .notification-drawer-content::-webkit-scrollbar {
+    width: 8px;
+}
+.window-content::-webkit-scrollbar-track, .notification-drawer-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.window-content::-webkit-scrollbar-thumb, .notification-drawer-content::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 20px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+.window-content::-webkit-scrollbar-thumb:hover, .notification-drawer-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
+}
+
+/* --- Window Resizer Handle --- */
+.resizer {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    bottom: 0;
+    right: 0;
+    cursor: nwse-resize; /* Indicates resizing action */
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 4px;
+}
+.app-window[data-maximized="true"] .resizer {
+    display: none; /* Hide resizer when window is maximized */
+}
+
+/* --- Notification Drawer & Profile Menu --- */
+.notification-drawer {
+    transform: translateX(100%); /* Off-screen by default */
+    transition: transform 0.3s ease-in-out;
+}
+.notification-drawer.open {
+    transform: translateX(0); /* Slides in when open */
+}
+.profile-menu {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+    transition: opacity 0.1s ease-out, transform 0.1s ease-out;
+    pointer-events: none;
+}
+.profile-menu.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* --- Mobile-Specific Styles --- */
+/* These styles apply only when the 'is-mobile' class is on the body */
+.mobile-home-screen {
+    display: none; /* Hidden on desktop */
+}
+.is-mobile .mobile-home-screen {
+    display: grid; /* Displayed as a grid on mobile */
+}
+.is-mobile .dock, .is-mobile .resizer {
+    display: none; /* Hide dock and resizer on mobile */
+}
+.is-mobile .app-window {
+    /* Make windows full-screen on mobile */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    z-index: 100 !important;
+}
+.is-mobile .app-window .min-btn, .is-mobile .app-window .max-btn {
+    display: none; /* Hide minimize/maximize buttons on mobile */
+}

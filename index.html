@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>macOS Style Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-gray-900 text-white">
+
+    <!-- Desktop Environment -->
+    <div id="desktop" class="desktop-bg relative w-full h-full">
+
+        <!-- Top Menu Bar -->
+        <div id="menu-bar"
+            class="fixed top-0 left-0 right-0 h-8 bg-black/20 backdrop-blur-md flex items-center justify-between px-4 text-sm z-50">
+            <div class="flex items-center space-x-4">
+                <div class="font-bold">Admin</div>
+                <div id="active-app-menu" class="font-semibold">Finder</div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div id="theme-switcher" class="cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                    </svg>
+                </div>
+                <div id="notification-icon" class="cursor-pointer relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    <span class="absolute -top-1 -right-1 flex h-3 w-3"><span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span
+                            class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span>
+                </div>
+                <div id="profile-icon" class="relative cursor-pointer">
+                    <img src="https://placehold.co/24x24/7c3aed/ffffff?text=A" class="w-6 h-6 rounded-full"
+                        alt="User Avatar">
+                    <div id="profile-menu"
+                        class="profile-menu absolute top-full right-0 mt-2 w-48 bg-gray-800/80 backdrop-blur-md border border-white/20 rounded-md shadow-lg py-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-200 hover:bg-white/10">Profile</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-200 hover:bg-white/10">Settings</a>
+                        <div class="border-t border-white/10 my-1"></div>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-200 hover:bg-white/10">Logout</a>
+                    </div>
+                </div>
+                <div id="clock" class="font-medium"></div>
+            </div>
+        </div>
+
+        <!-- Notification Drawer -->
+        <div id="notification-drawer"
+            class="notification-drawer fixed top-0 right-0 h-full w-80 bg-gray-800/80 backdrop-blur-md border-l border-white/20 z-[60] pt-10">
+            <div class="p-4 border-b border-white/10">
+                <h3 class="font-semibold text-lg">Notifications</h3>
+            </div>
+            <div id="notification-drawer-content" class="h-full overflow-y-auto pb-16">
+                <!-- Notifications will be injected here -->
+            </div>
+        </div>
+
+        <!-- Mobile Home Screen -->
+        <div id="mobile-home-screen"
+            class="mobile-home-screen w-full h-full p-8 pt-16 grid-cols-3 sm:grid-cols-4 gap-8 text-center">
+            <!-- Mobile app icons will be injected here -->
+        </div>
+
+        <!-- App Windows Container -->
+        <div id="windows-container" class="relative w-full h-full"></div>
+
+        <!-- Dock -->
+        <div class="fixed bottom-4 left-1/2 z-40">
+            <div id="dock"
+                class="dock flex items-end h-20 space-x-2 p-2 bg-white/10 border border-white/20 rounded-2xl">
+                <!-- Dock Icons will be injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
