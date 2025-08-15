@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- App & Notification Definitions ---
     const apps = [
-        { id: 'dashboard', name: 'Dashboard', icon: '🏠', contentUrl: 'dashboard.html', content: null },
-        { id: 'users', name: 'Users', icon: '👥', contentUrl: 'users.html', content: null },
-        { id: 'settings', name: 'Settings', icon: '⚙️', contentUrl: 'settings.html', content: null },
-        { id: 'reports', name: 'Reports', icon: '📊', contentUrl: 'reports.html', content: null }
+        { id: 'dashboard', name: 'Dashboard', icon: '🏠', contentUrl: 'content/dashboard.html', content: null },
+        { id: 'users', name: 'Users', icon: '👥', contentUrl: 'content/users.html', content: null },
+        { id: 'settings', name: 'Settings', icon: '⚙️', contentUrl: 'content/settings.html', content: null },
+        { id: 'reports', name: 'Reports', icon: '📊', contentUrl: 'content/reports.html', content: null }
     ];
 
     const notifications = [
