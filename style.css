@@ -17,12 +17,12 @@ body {
 
 /* --- Desktop Wallpaper --- */
 .desktop-bg {
-    background-image: url('https://images.unsplash.com/photo-1620646231593-61e6319885a6?q=80&w=2070&auto=format&fit=crop');
+    background-image: url('images/bg-light.jpg');
     background-size: cover;
     background-position: center;
 }
 .dark .desktop-bg {
-     background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1974&auto=format&fit=crop');
+     background-image: url('images/bg-dark.jpg');
 }
 
 /* --- Application Window Styles --- */
